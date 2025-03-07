@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Crawler Error Detector</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+      h1 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .container {
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-bottom: 30px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        width: 100%;
+        transition: background-color 0.3s;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      button:disabled {
+        background-color: #95a5a6;
+        cursor: not-allowed;
+      }
+      .progress {
+        display: none;
+        text-align: center;
+        margin: 20px 0;
+      }
+      .results {
+        display: none;
+      }
+      .error-card {
+        border-left: 4px solid #e74c3c;
+        background-color: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+      }
+      .error-url {
+        font-weight: bold;
+        color: #2c3e50;
+        word-break: break-all;
+      }
+      .error-type {
+        color: #e74c3c;
+        font-weight: 600;
+        margin: 8px 0;
+      }
+      .error-details {
+        color: #7f8c8d;
+      }
+      .status-code {
+        display: inline-block;
+        background-color: #e74c3c;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 14px;
+      }
+      .no-errors {
+        text-align: center;
+        color: #27ae60;
+        font-weight: bold;
+        padding: 20px;
+      }
+      .summary {
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+      #loading {
+        text-align: center;
+        margin: 20px 0;
+      }
+      .spinner {
+        border: 4px solid rgba(0, 0, 0, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border-left-color: #3498db;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .advanced-options-toggle {
+        text-align: center;
+        color: #3498db;
+        cursor: pointer;
+        margin: 15px 0;
+      }
+      .advanced-options {
+        display: none;
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Web Crawler Error Detector</h1>
+
+    <div class="container">
+      <form id="crawlForm">
+        <div class="form-group">
+          <label for="startUrl">Starting URL</label>
+          <input
+            type="url"
+            id="startUrl"
+            placeholder="https://example.com"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="maxDepth">Crawl Depth</label>
+          <input type="number" id="maxDepth" value="2" min="1" max="5" />
+        </div>
+
+        <div class="advanced-options-toggle" id="advancedToggle">
+          Show Advanced Options ▼
+        </div>
+
+        <div class="advanced-options" id="advancedOptions">
+          <div class="form-group">
+            <label for="concurrency">Concurrency (Simultaneous Requests)</label>
+            <input type="number" id="concurrency" value="5" min="1" max="20" />
+          </div>
+
+          <div class="form-group">
+            <label for="timeout">Request Timeout (seconds)</label>
+            <input type="number" id="timeout" value="10" min="1" max="60" />
+          </div>
+
+          <div class="form-group">
+            <label for="userAgent">Custom User Agent (optional)</label>
+            <input
+              type="text"
+              id="userAgent"
+              placeholder="Leave blank for default"
+            />
+          </div>
+        </div>
+
+        <button type="submit" id="startButton">Start Crawling</button>
+      </form>
+
+      <div id="loading" style="display: none">
+        <div class="spinner"></div>
+        <p>
+          Crawling in progress... This may take a while depending on the website
+          size and crawl depth.
+        </p>
+      </div>
+    </div>
+
+    <div class="container results" id="resultsContainer">
+      <div class="summary" id="summary"></div>
+      <div id="errorList"></div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Toggle advanced options
+        const advancedToggle = document.getElementById("advancedToggle");
+        const advancedOptions = document.getElementById("advancedOptions");
+
+        advancedToggle.addEventListener("click", () => {
+          if (advancedOptions.style.display === "block") {
+            advancedOptions.style.display = "none";
+            advancedToggle.innerHTML = "Show Advanced Options ▼";
+          } else {
+            advancedOptions.style.display = "block";
+            advancedToggle.innerHTML = "Hide Advanced Options ▲";
+          }
+        });
+
+        // Form submission
+        const crawlForm = document.getElementById("crawlForm");
+        const startButton = document.getElementById("startButton");
+        const loading = document.getElementById("loading");
+        const resultsContainer = document.getElementById("resultsContainer");
+        const summary = document.getElementById("summary");
+        const errorList = document.getElementById("errorList");
+
+        crawlForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // Get form values
+          const startUrl = document.getElementById("startUrl").value;
+          const maxDepth = document.getElementById("maxDepth").value;
+          const concurrency = document.getElementById("concurrency").value;
+          const timeout = document.getElementById("timeout").value;
+          const userAgent = document.getElementById("userAgent").value;
+
+          // Prepare data for API call
+          const data = {
+            start_url: startUrl,
+            max_depth: maxDepth,
+            concurrency: concurrency,
+            timeout: timeout,
+          };
+
+          if (userAgent) {
+            data.user_agent = userAgent;
+          }
+
+          // UI updates before starting
+          startButton.disabled = true;
+          loading.style.display = "block";
+          resultsContainer.style.display = "none";
+
+          try {
+            // Make API call
+            const response = await fetch("/crawl", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+              displayResults(result);
+            } else {
+              // Handle errors
+              alert(`Error: ${result.error || "Unknown error occurred"}`);
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("An error occurred while communicating with the server");
+          } finally {
+            // UI updates after finishing
+            startButton.disabled = false;
+            loading.style.display = "none";
+          }
+        });
+
+        // Display results function
+        function displayResults(data) {
+          resultsContainer.style.display = "block";
+          errorList.innerHTML = "";
+
+          const errorsFound = data.errors_found || 0;
+
+          if (errorsFound > 0) {
+            summary.innerHTML = `Found ${errorsFound} page${
+              errorsFound === 1 ? "" : "s"
+            } with errors`;
+
+            // Sort results by error type
+            data.results.sort((a, b) => {
+              return a.error_type.localeCompare(b.error_type);
+            });
+
+            // Create error cards
+            data.results.forEach((error) => {
+              const errorCard = document.createElement("div");
+              errorCard.className = "error-card";
+
+              let statusDisplay = "";
+              if (error.status_code) {
+                statusDisplay = `<span class="status-code">${error.status_code}</span>`;
+              }
+
+              errorCard.innerHTML = `
+                            <div class="error-url">${error.url}</div>
+                            <div class="error-type">${error.error_type} ${statusDisplay}</div>
+                            <div class="error-details">${error.message}</div>
+                        `;
+
+              errorList.appendChild(errorCard);
+            });
+          } else {
+            errorList.innerHTML =
+              '<div class="no-errors">No errors found! The website appears to be working properly.</div>';
+            summary.innerHTML = "Crawl completed successfully";
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
