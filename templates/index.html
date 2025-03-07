@@ -74,8 +74,74 @@
         padding: 15px;
         margin-bottom: 15px;
         border-radius: 4px;
+        position: relative;
       }
-      .error-url {
+      .success-card {
+        border-left: 4px solid #2ecc71;
+        background-color: #f9f9f9;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        position: relative;
+      }
+      .card-actions {
+        margin-top: 15px;
+        display: flex;
+        gap: 10px;
+      }
+      .recrawl-btn {
+        background-color: #f39c12;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+        width: auto;
+      }
+      .recrawl-btn:hover {
+        background-color: #e67e22;
+      }
+      .recrawl-btn:disabled {
+        background-color: #d0d0d0;
+        cursor: not-allowed;
+      }
+      .recrawl-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s linear infinite;
+        margin-right: 5px;
+        vertical-align: middle;
+      }
+      .change-highlight {
+        background-color: #fff8e1;
+        padding: 8px;
+        margin-top: 10px;
+        border-radius: 4px;
+        border-left: 3px solid #f39c12;
+      }
+      .change-entry {
+        margin-bottom: 5px;
+      }
+      .change-from {
+        text-decoration: line-through;
+        color: #e74c3c;
+        margin-right: 10px;
+      }
+      .change-to {
+        color: #2ecc71;
+        font-weight: bold;
+      }
+      .change-label {
+        font-weight: bold;
+        margin-right: 5px;
+      }
+      .page-url {
         font-weight: bold;
         color: #2c3e50;
         word-break: break-all;
@@ -85,8 +151,40 @@
         font-weight: 600;
         margin: 8px 0;
       }
-      .error-details {
+      .success-type {
+        color: #2ecc71;
+        font-weight: 600;
+        margin: 8px 0;
+      }
+      .page-details {
         color: #7f8c8d;
+        margin-bottom: 8px;
+      }
+      .error-additional {
+        margin-top: 10px;
+        padding: 8px;
+        background-color: #f1f1f1;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+      .error-headers {
+        margin-top: 8px;
+        font-family: monospace;
+        font-size: 12px;
+        max-height: 200px;
+        overflow-y: auto;
+        display: none;
+        background-color: #f8f8f8;
+        padding: 10px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      .toggle-headers {
+        color: #3498db;
+        font-size: 12px;
+        cursor: pointer;
+        display: inline-block;
+        margin-top: 5px;
       }
       .status-code {
         display: inline-block;
@@ -96,9 +194,17 @@
         border-radius: 3px;
         font-size: 14px;
       }
-      .no-errors {
+      .status-code-success {
+        display: inline-block;
+        background-color: #2ecc71;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 14px;
+      }
+      .no-pages {
         text-align: center;
-        color: #27ae60;
+        color: #7f8c8d;
         font-weight: bold;
         padding: 20px;
       }
@@ -139,6 +245,116 @@
         border-top: 1px solid #eee;
         padding-top: 15px;
       }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+      .stat-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+      .stat-value {
+        font-size: 28px;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+      .stat-label {
+        color: #7f8c8d;
+        font-size: 14px;
+      }
+      .total {
+        color: #3498db;
+      }
+      .success {
+        color: #2ecc71;
+      }
+      .error {
+        color: #e74c3c;
+      }
+      .tabs {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+      }
+      .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+        margin-right: 5px;
+      }
+      .tab:hover {
+        color: #3498db;
+      }
+      .tab.active {
+        border-bottom: 2px solid #3498db;
+        color: #3498db;
+        font-weight: bold;
+      }
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .error-type-filter {
+        margin: 15px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .error-type-pill {
+        background-color: #f1f1f1;
+        padding: 5px 15px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s;
+      }
+      .error-type-pill:hover {
+        background-color: #e1e1e1;
+      }
+      .error-type-pill.active {
+        background-color: #3498db;
+        color: white;
+      }
+      .search-bar {
+        margin-bottom: 15px;
+      }
+      .search-input {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+      .referring-page {
+        font-size: 13px;
+        color: #95a5a6;
+        margin-top: 5px;
+      }
+      .referring-page a {
+        color: #3498db;
+        text-decoration: none;
+      }
+      .referring-page a:hover {
+        text-decoration: underline;
+      }
+      .timestamp {
+        font-size: 12px;
+        color: #95a5a6;
+        margin-top: 5px;
+        text-align: right;
+      }
     </style>
   </head>
   <body>
@@ -158,7 +374,7 @@
 
         <div class="form-group">
           <label for="maxDepth">Crawl Depth</label>
-          <input type="number" id="maxDepth" value="2" min="1" max="5" />
+          <input type="number" id="maxDepth" value="2" min="1" max="10" />
         </div>
 
         <div class="advanced-options-toggle" id="advancedToggle">
@@ -173,7 +389,7 @@
 
           <div class="form-group">
             <label for="timeout">Request Timeout (seconds)</label>
-            <input type="number" id="timeout" value="10" min="1" max="60" />
+            <input type="number" id="timeout" value="10" min="1" max="3600" />
           </div>
 
           <div class="form-group">
@@ -199,8 +415,39 @@
     </div>
 
     <div class="container results" id="resultsContainer">
-      <div class="summary" id="summary"></div>
-      <div id="errorList"></div>
+      <div id="statisticsContainer"></div>
+
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="all">All Pages</div>
+        <div class="tab" data-tab="errors">Pages with Errors</div>
+        <div class="tab" data-tab="success">Successfully Crawled</div>
+      </div>
+
+      <div class="search-bar">
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          placeholder="Search pages by URL..."
+        />
+      </div>
+
+      <div id="errorTypeFilters" class="error-type-filter"></div>
+
+      <div class="tab-content active" id="tabAll">
+        <div class="summary" id="summaryAll"></div>
+        <div id="allPagesList"></div>
+      </div>
+
+      <div class="tab-content" id="tabErrors">
+        <div class="summary" id="summaryErrors"></div>
+        <div id="errorList"></div>
+      </div>
+
+      <div class="tab-content" id="tabSuccess">
+        <div class="summary" id="summarySuccess"></div>
+        <div id="successList"></div>
+      </div>
     </div>
 
     <script>
@@ -224,8 +471,24 @@
         const startButton = document.getElementById("startButton");
         const loading = document.getElementById("loading");
         const resultsContainer = document.getElementById("resultsContainer");
-        const summary = document.getElementById("summary");
+        const tabsContainer = document.getElementById("tabs");
+        const statisticsContainer = document.getElementById(
+          "statisticsContainer"
+        );
+        const errorTypeFilters = document.getElementById("errorTypeFilters");
+        const searchInput = document.getElementById("searchInput");
+
+        // Tab elements
+        const summaryAll = document.getElementById("summaryAll");
+        const summaryErrors = document.getElementById("summaryErrors");
+        const summarySuccess = document.getElementById("summarySuccess");
+        const allPagesList = document.getElementById("allPagesList");
         const errorList = document.getElementById("errorList");
+        const successList = document.getElementById("successList");
+
+        // Global state
+        let crawlData = null;
+        let activeErrorTypeFilter = "all";
 
         crawlForm.addEventListener("submit", async (e) => {
           e.preventDefault();
@@ -267,6 +530,7 @@
             const result = await response.json();
 
             if (response.ok) {
+              crawlData = result;
               displayResults(result);
             } else {
               // Handle errors
@@ -282,47 +546,685 @@
           }
         });
 
+        // Tab switching
+        tabsContainer.addEventListener("click", (e) => {
+          if (e.target.classList.contains("tab")) {
+            // Remove active class from all tabs
+            document.querySelectorAll(".tab").forEach((tab) => {
+              tab.classList.remove("active");
+            });
+
+            // Hide all tab contents
+            document.querySelectorAll(".tab-content").forEach((content) => {
+              content.classList.remove("active");
+            });
+
+            // Activate clicked tab
+            e.target.classList.add("active");
+            const tabName = e.target.getAttribute("data-tab");
+            document
+              .getElementById(
+                `tab${tabName.charAt(0).toUpperCase() + tabName.slice(1)}`
+              )
+              .classList.add("active");
+          }
+        });
+
+        // Search functionality
+        searchInput.addEventListener("input", () => {
+          if (crawlData) {
+            filterAndDisplayResults();
+          }
+        });
+
         // Display results function
         function displayResults(data) {
           resultsContainer.style.display = "block";
-          errorList.innerHTML = "";
 
-          const errorsFound = data.errors_found || 0;
+          // Store data for filtering
+          crawlData = data;
 
-          if (errorsFound > 0) {
-            summary.innerHTML = `Found ${errorsFound} page${
-              errorsFound === 1 ? "" : "s"
-            } with errors`;
+          // Display statistics
+          displayStatistics(data.stats);
 
-            // Sort results by error type
-            data.results.sort((a, b) => {
-              return a.error_type.localeCompare(b.error_type);
-            });
+          // Setup error type filters
+          setupErrorTypeFilters(data.stats.by_error_type);
 
-            // Create error cards
-            data.results.forEach((error) => {
-              const errorCard = document.createElement("div");
-              errorCard.className = "error-card";
+          // Filter and display results
+          filterAndDisplayResults();
+        }
 
-              let statusDisplay = "";
-              if (error.status_code) {
-                statusDisplay = `<span class="status-code">${error.status_code}</span>`;
-              }
+        // Display statistics
+        function displayStatistics(stats) {
+          // Clear the statistics container first
+          statisticsContainer.innerHTML = "";
 
-              errorCard.innerHTML = `
-                            <div class="error-url">${error.url}</div>
-                            <div class="error-type">${error.error_type} ${statusDisplay}</div>
-                            <div class="error-details">${error.message}</div>
-                        `;
+          const totalCrawled = stats.total_crawled || 0;
+          const successfulPages = stats.successful || 0;
+          const errorPages = stats.errors || 0;
 
-              errorList.appendChild(errorCard);
-            });
-          } else {
-            errorList.innerHTML =
-              '<div class="no-errors">No errors found! The website appears to be working properly.</div>';
-            summary.innerHTML = "Crawl completed successfully";
+          // Create main stats grid
+          const mainStatsGrid = document.createElement("div");
+          mainStatsGrid.className = "stats-grid";
+          mainStatsGrid.innerHTML = `
+            <div class="stat-card">
+              <div class="stat-label">Total Pages Crawled</div>
+              <div class="stat-value total">${totalCrawled}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Successfully Crawled</div>
+              <div class="stat-value success">${successfulPages}</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Pages with Errors</div>
+              <div class="stat-value error">${errorPages}</div>
+            </div>
+          `;
+
+          // Add the main stats
+          statisticsContainer.appendChild(mainStatsGrid);
+
+          // If we have error type breakdown, add another row of stats
+          if (
+            stats.by_error_type &&
+            Object.keys(stats.by_error_type).length > 0
+          ) {
+            const errorTypeStats = document.createElement("div");
+            errorTypeStats.className = "stats-grid";
+
+            for (const [errorType, count] of Object.entries(
+              stats.by_error_type
+            )) {
+              errorTypeStats.innerHTML += `
+                <div class="stat-card">
+                  <div class="stat-label">${errorType}</div>
+                  <div class="stat-value error">${count}</div>
+                </div>
+              `;
+            }
+
+            statisticsContainer.appendChild(errorTypeStats);
           }
         }
+
+        // Setup error type filters
+        function setupErrorTypeFilters(errorTypes) {
+          errorTypeFilters.innerHTML =
+            '<div class="error-type-pill active" data-filter="all">All Errors</div>';
+
+          for (const errorType of Object.keys(errorTypes)) {
+            errorTypeFilters.innerHTML += `
+              <div class="error-type-pill" data-filter="${errorType}">${errorType}</div>
+            `;
+          }
+
+          // Add event listeners to filters
+          errorTypeFilters
+            .querySelectorAll(".error-type-pill")
+            .forEach((pill) => {
+              pill.addEventListener("click", (e) => {
+                // Update active filter
+                document.querySelectorAll(".error-type-pill").forEach((p) => {
+                  p.classList.remove("active");
+                });
+                e.target.classList.add("active");
+
+                // Set active filter
+                activeErrorTypeFilter = e.target.getAttribute("data-filter");
+
+                // Update display
+                filterAndDisplayResults();
+              });
+            });
+        }
+
+        // Filter and display results based on search and filters
+        function filterAndDisplayResults() {
+          const searchTerm = searchInput.value.toLowerCase();
+
+          // Filter errors based on search and active filter
+          const filteredErrors = crawlData.errors.filter((error) => {
+            const matchesSearch = error.url.toLowerCase().includes(searchTerm);
+            const matchesFilter =
+              activeErrorTypeFilter === "all" ||
+              error.error_type === activeErrorTypeFilter;
+            return matchesSearch && matchesFilter;
+          });
+
+          // Filter successful pages based on search
+          const filteredSuccess = crawlData.successful.filter((page) => {
+            return page.url.toLowerCase().includes(searchTerm);
+          });
+
+          // Combine for all pages tab
+          const allPages = [...filteredErrors, ...filteredSuccess];
+
+          // Update summaries
+          summaryAll.innerHTML = `Showing ${allPages.length} pages${
+            searchTerm ? ` matching "${searchTerm}"` : ""
+          }`;
+          summaryErrors.innerHTML = `Showing ${
+            filteredErrors.length
+          } pages with errors${searchTerm ? ` matching "${searchTerm}"` : ""}`;
+          summarySuccess.innerHTML = `Showing ${
+            filteredSuccess.length
+          } successfully crawled pages${
+            searchTerm ? ` matching "${searchTerm}"` : ""
+          }`;
+
+          // Display in respective tabs
+          displayAllPages(allPages);
+          displayErrorPages(filteredErrors);
+          displaySuccessPages(filteredSuccess);
+        }
+
+        // Display all pages
+        function displayAllPages(pages) {
+          allPagesList.innerHTML = "";
+
+          if (pages.length === 0) {
+            allPagesList.innerHTML =
+              '<div class="no-pages">No pages to display.</div>';
+            return;
+          }
+
+          pages.forEach((page) => {
+            if (page.error_type) {
+              // This is an error page
+              displayErrorCard(page, allPagesList);
+            } else {
+              // This is a success page
+              displaySuccessCard(page, allPagesList);
+            }
+          });
+        }
+
+        // Display error pages
+        function displayErrorPages(errors) {
+          errorList.innerHTML = "";
+
+          if (errors.length === 0) {
+            errorList.innerHTML =
+              '<div class="no-pages">No pages with errors found.</div>';
+            return;
+          }
+
+          errors.forEach((error) => {
+            displayErrorCard(error, errorList);
+          });
+        }
+
+        // Display success pages
+        function displaySuccessPages(pages) {
+          successList.innerHTML = "";
+
+          if (pages.length === 0) {
+            successList.innerHTML =
+              '<div class="no-pages">No successfully crawled pages to display.</div>';
+            return;
+          }
+
+          pages.forEach((page) => {
+            displaySuccessCard(page, successList);
+          });
+        }
+
+        // Create and append error card
+        function displayErrorCard(error, container) {
+          const errorCard = document.createElement("div");
+          errorCard.className = "error-card";
+          const cardId = `card-${Math.random().toString(36).substring(2, 11)}`;
+          errorCard.id = cardId;
+
+          let statusDisplay = "";
+          if (error.status_code) {
+            statusDisplay = `<span class="status-code">${error.status_code}</span>`;
+          }
+
+          let headersHtml = "";
+          if (error.headers) {
+            const headersId = `headers-${Math.random()
+              .toString(36)
+              .substr(2, 9)}`;
+            headersHtml = `
+              <div class="toggle-headers" data-target="${headersId}">Show Response Headers ▼</div>
+              <div id="${headersId}" class="error-headers">
+                <pre>${JSON.stringify(error.headers, null, 2)}</pre>
+              </div>
+            `;
+          }
+
+          let detailsHtml = "";
+          if (error.details) {
+            detailsHtml = `
+              <div class="error-additional">
+                <strong>Additional Details:</strong> ${error.details}
+              </div>
+            `;
+          }
+
+          let referringHtml = "";
+          if (error.referring_page) {
+            referringHtml = `
+              <div class="referring-page">
+                Linked from: <a href="${error.referring_page}" target="_blank">${error.referring_page}</a>
+              </div>
+            `;
+          }
+
+          const timestamp = new Date().toLocaleString();
+
+          // Add recrawl button and changes container
+          const recrawlBtnId = `recrawl-${Math.random()
+            .toString(36)
+            .substring(2, 11)}`;
+          const changesContainerId = `changes-${Math.random()
+            .toString(36)
+            .substring(2, 11)}`;
+
+          errorCard.innerHTML = `
+            <div class="page-url">${error.url}</div>
+            <div class="error-type">${error.error_type} ${statusDisplay}</div>
+            <div class="page-details">${error.message}</div>
+            ${detailsHtml}
+            ${referringHtml}
+            ${headersHtml}
+            <div class="timestamp">Last checked: ${timestamp}</div>
+            <div class="card-actions">
+              <button id="${recrawlBtnId}" class="recrawl-btn" data-url="${error.url}" data-card="${cardId}">Recrawl Page</button>
+            </div>
+            <div id="${changesContainerId}" class="change-highlight" style="display:none;"></div>
+          `;
+
+          container.appendChild(errorCard);
+
+          // Add event listener to recrawl button
+          document
+            .getElementById(recrawlBtnId)
+            .addEventListener("click", function () {
+              recrawlPage(this, error, changesContainerId);
+            });
+        }
+
+        // Create and append success card
+        function displaySuccessCard(page, container) {
+          const successCard = document.createElement("div");
+          successCard.className = "success-card";
+          const cardId = `card-${Math.random().toString(36).substring(2, 11)}`;
+          successCard.id = cardId;
+
+          const statusDisplay = `<span class="status-code-success">${page.status_code}</span>`;
+
+          let referringHtml = "";
+          if (page.referring_page) {
+            referringHtml = `
+              <div class="referring-page">
+                Linked from: <a href="${page.referring_page}" target="_blank">${page.referring_page}</a>
+              </div>
+            `;
+          }
+
+          const pageTitle = page.title ? page.title : "No title";
+          const linksCount = page.links_count
+            ? `${page.links_count} links found`
+            : "";
+
+          const timestamp = new Date().toLocaleString();
+
+          // Add recrawl button and changes container
+          const recrawlBtnId = `recrawl-${Math.random()
+            .toString(36)
+            .substring(2, 11)}`;
+          const changesContainerId = `changes-${Math.random()
+            .toString(36)
+            .substring(2, 11)}`;
+
+          successCard.innerHTML = `
+            <div class="page-url">${page.url}</div>
+            <div class="success-type">Successfully Crawled ${statusDisplay}</div>
+            <div class="page-details">
+              <strong>Title:</strong> ${pageTitle}<br>
+              <strong>Content Type:</strong> ${page.content_type}<br>
+              <strong>Depth:</strong> ${page.depth}
+              ${linksCount ? `<br><strong>Links:</strong> ${linksCount}` : ""}
+            </div>
+            ${referringHtml}
+            <div class="timestamp">Last checked: ${timestamp}</div>
+            <div class="card-actions">
+              <button id="${recrawlBtnId}" class="recrawl-btn" data-url="${
+            page.url
+          }" data-card="${cardId}">Recrawl Page</button>
+            </div>
+            <div id="${changesContainerId}" class="change-highlight" style="display:none;"></div>
+          `;
+
+          container.appendChild(successCard);
+
+          // Add event listener to recrawl button
+          document
+            .getElementById(recrawlBtnId)
+            .addEventListener("click", function () {
+              recrawlPage(this, page, changesContainerId);
+            });
+        }
+
+        // Function to recrawl a single page and update the card
+        async function recrawlPage(
+          buttonElement,
+          pageData,
+          changesContainerId
+        ) {
+          // Show loading state
+          const originalText = buttonElement.innerHTML;
+          buttonElement.disabled = true;
+          buttonElement.innerHTML = `<span class="recrawl-spinner"></span> Checking...`;
+
+          try {
+            // Prepare the current page data to compare against
+            const previousData = {
+              url: pageData.url,
+              status_code: pageData.status_code,
+              is_error: !!pageData.error_type,
+              error_type: pageData.error_type,
+              message: pageData.message,
+              title: pageData.title,
+            };
+
+            // Call the API
+            const response = await fetch("/recrawl", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                url: pageData.url,
+                timeout: document.getElementById("timeout").value || 10,
+                user_agent: document.getElementById("userAgent").value || "",
+                previous_data: previousData,
+              }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+              throw new Error(result.error || "Failed to recrawl the page");
+            }
+
+            console.log("Recrawl result:", result);
+
+            // Display changes if any
+            const changesContainer =
+              document.getElementById(changesContainerId);
+
+            if (result.has_changed) {
+              let changesHtml = `<strong>Changes Detected:</strong><br>`;
+
+              for (const [key, change] of Object.entries(result.changes)) {
+                let label = key;
+
+                // Format the label for better readability
+                if (key === "status_code") label = "Status Code";
+                if (key === "error_type") label = "Error Type";
+                if (key === "message") label = "Message";
+                if (key === "title") label = "Title";
+                if (key === "status_changed") label = "Page Status";
+
+                changesHtml += `
+                  <div class="change-entry">
+                    <span class="change-label">${label}:</span>
+                    <span class="change-from">${change.from || "none"}</span>
+                    <span class="change-to">${change.to || "none"}</span>
+                  </div>
+                `;
+              }
+
+              // Add null check before setting innerHTML
+              if (changesContainer) {
+                changesContainer.innerHTML = changesHtml;
+                changesContainer.style.display = "block";
+              } else {
+                console.warn(
+                  "Changes container not found:",
+                  changesContainerId
+                );
+              }
+
+              // UPDATE THE GLOBAL DATA STATE
+              updateCrawlData(pageData, result.current);
+
+              // Force refresh the UI after data update
+              filterAndDisplayResults();
+
+              // If the page status changed completely (from error to success or vice versa)
+              // we should replace the entire card
+              if (result.changes.status_changed) {
+                const cardElement = document.getElementById(
+                  buttonElement.getAttribute("data-card")
+                );
+
+                // Add null check before accessing parentElement
+                if (cardElement) {
+                  const parentContainer = cardElement.parentElement;
+
+                  // Only proceed if both cardElement and parentContainer exist
+                  if (parentContainer) {
+                    // Remove the old card
+                    cardElement.remove();
+
+                    // Create a new card based on the current status
+                    if (result.current.is_error) {
+                      displayErrorCard(result.current, parentContainer);
+                    } else {
+                      displaySuccessCard(result.current, parentContainer);
+                    }
+                  } else {
+                    console.warn(
+                      "Parent container not found for card:",
+                      buttonElement.getAttribute("data-card")
+                    );
+                    // Fallback: refresh the entire display
+                    filterAndDisplayResults();
+                  }
+                } else {
+                  console.warn(
+                    "Card element not found:",
+                    buttonElement.getAttribute("data-card")
+                  );
+                  // Fallback: refresh the entire display
+                  filterAndDisplayResults();
+                }
+              }
+            } else {
+              // No changes
+              // Add null check before setting innerHTML
+              if (changesContainer) {
+                changesContainer.innerHTML = "No changes detected";
+                changesContainer.style.display = "block";
+              } else {
+                console.warn(
+                  "Changes container not found:",
+                  changesContainerId
+                );
+              }
+
+              // Update the timestamp
+              const cardElement = document.getElementById(
+                buttonElement.getAttribute("data-card")
+              );
+
+              // Add null check before accessing querySelector
+              if (cardElement) {
+                const timestamp = cardElement.querySelector(".timestamp");
+                if (timestamp) {
+                  timestamp.innerHTML = `Last checked: ${new Date().toLocaleString()} (No changes)`;
+                } else {
+                  console.warn("Timestamp element not found in card");
+                }
+              } else {
+                console.warn(
+                  "Card element not found:",
+                  buttonElement.getAttribute("data-card")
+                );
+              }
+            }
+          } catch (error) {
+            console.error("Recrawl error:", error);
+            alert(`Error recrawling the page: ${error.message}`);
+          } finally {
+            // Restore button state
+            buttonElement.disabled = false;
+            buttonElement.innerHTML = originalText;
+          }
+        }
+
+        // New function to update global crawlData state
+        function updateCrawlData(oldData, newData) {
+          if (!crawlData) {
+            console.error("crawlData is null or undefined");
+            return;
+          }
+
+          console.log("Updating crawlData:", {
+            oldData,
+            newData,
+            currentData: { ...crawlData },
+          });
+
+          const url = oldData.url;
+
+          try {
+            // Store old error status
+            const wasError = !!oldData.error_type;
+            const isNowError = !!newData.is_error;
+
+            // If status changed, update the statistics counters properly
+            const statusChanged = wasError !== isNowError;
+
+            // Check if this was an error page previously
+            if (wasError) {
+              // Find and remove the old error entry
+              const errorIndex = crawlData.errors.findIndex(
+                (e) => e.url === url
+              );
+              console.log(`Found error at index ${errorIndex} for URL ${url}`);
+
+              if (errorIndex !== -1) {
+                crawlData.errors.splice(errorIndex, 1);
+                console.log(`Removed error at index ${errorIndex}`);
+              }
+            } else {
+              // Find and remove the old success entry
+              const successIndex = crawlData.successful.findIndex(
+                (s) => s.url === url
+              );
+              console.log(
+                `Found success at index ${successIndex} for URL ${url}`
+              );
+
+              if (successIndex !== -1) {
+                crawlData.successful.splice(successIndex, 1);
+                console.log(`Removed success at index ${successIndex}`);
+              }
+            }
+
+            // Add the entry to the appropriate array based on current status
+            if (isNowError) {
+              // Format for error array
+              const errorData = {
+                url: url,
+                error_type: newData.error_type,
+                status_code: newData.status_code,
+                message: newData.message,
+              };
+
+              // Add optional fields if present
+              if (newData.details) errorData.details = newData.details;
+              if (newData.headers) errorData.headers = newData.headers;
+              if (newData.referring_page)
+                errorData.referring_page = newData.referring_page;
+
+              crawlData.errors.push(errorData);
+              console.log(`Added new error data:`, errorData);
+            } else {
+              // Format for success array
+              const successData = {
+                url: url,
+                status_code: newData.status_code,
+                content_type: newData.content_type || "text/html",
+              };
+
+              // Add optional fields if present
+              if (newData.title) successData.title = newData.title;
+              if (newData.depth) successData.depth = newData.depth;
+              if (newData.links_count)
+                successData.links_count = newData.links_count;
+              if (newData.referring_page)
+                successData.referring_page = newData.referring_page;
+
+              crawlData.successful.push(successData);
+              console.log(`Added new success data:`, successData);
+            }
+
+            // Update statistics counters
+            const successCount = crawlData.successful.length;
+            const errorCount = crawlData.errors.length;
+
+            // Make sure stats object exists
+            if (!crawlData.stats) {
+              crawlData.stats = {};
+            }
+
+            // Update the counters
+            crawlData.stats.successful = successCount;
+            crawlData.stats.errors = errorCount;
+            crawlData.stats.total_crawled = successCount + errorCount;
+
+            console.log(
+              `Updated stats: total=${crawlData.stats.total_crawled}, errors=${errorCount}, successful=${successCount}`
+            );
+
+            // Recalculate error types
+            const errorTypes = {};
+            for (const error of crawlData.errors) {
+              const type = error.error_type || "Unknown";
+              errorTypes[type] = (errorTypes[type] || 0) + 1;
+            }
+            crawlData.stats.by_error_type = errorTypes;
+            console.log(`Updated error types:`, errorTypes);
+
+            // IMPORTANT: Complete UI refresh
+            // 1. Update the statistics display with fresh data
+            displayStatistics(crawlData.stats);
+
+            // 2. If error type filters need to be updated (error types changed)
+            setupErrorTypeFilters(crawlData.stats.by_error_type);
+
+            // 3. Force redisplay of all tabs
+            filterAndDisplayResults();
+
+            console.log("Final crawlData after update:", { ...crawlData });
+          } catch (err) {
+            console.error("Error updating crawlData:", err);
+          }
+        }
+
+        // Function to toggle header visibility
+        document.addEventListener("click", (e) => {
+          if (e.target.classList.contains("toggle-headers")) {
+            const targetId = e.target.getAttribute("data-target");
+            const headersElem = document.getElementById(targetId);
+
+            if (headersElem) {
+              if (headersElem.style.display === "block") {
+                headersElem.style.display = "none";
+                e.target.innerHTML = "Show Response Headers ▼";
+              } else {
+                headersElem.style.display = "block";
+                e.target.innerHTML = "Hide Response Headers ▲";
+              }
+            }
+          }
+        });
       });
     </script>
   </body>
